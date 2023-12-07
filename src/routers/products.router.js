@@ -1,10 +1,26 @@
 import { Router } from 'express';
 import { Sequelize } from 'sequelize';
+import { ProductsController } from '../controllers/products.controller.js';
 import { needSignin } from '../middlewares/need-signin.middleware.js';
 import db from '../models/index.cjs';
 
 const productsRouter = Router();
 const { Products, Users } = db;
+// -----------------------------------
+const productsController = new ProductsController();
+
+/* 상품 생성 API */
+productsRouter.post('/', productsController.createProduct);
+/* 상품 조회 API */
+productsRouter.get('/', productsController.getProducts);
+/* 상품 상세 조회 API */
+productsRouter.get('/:productId', productsController.getProductsById);
+/* 상품 수정 API */
+productsRouter.put('/:productId', productsController.updateProduct);
+/* 상품 삭제 API */
+productsRouter.delete('/:productId', productsController.deleteProduct);
+export default productsRouter;
+// -----------------------------------
 
 // 생성
 productsRouter.post('', needSignin, async (req, res) => {
