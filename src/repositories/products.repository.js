@@ -1,16 +1,16 @@
-import { Sequelize } from 'sequelize';
-import db from '../models/index.cjs';
-const { Products, Users } = db;
-
 export class ProductsRepository {
+  constructor(prisma) {
+    this.prisma = prisma;
+  }
+
   findAllProducts = async () => {
-    const products = await Products.findMany();
+    const products = await this.prisma.products.findMany();
 
     return products;
   };
 
   createProduct = async (id, name, title, description) => {
-    const createdProduct = await Products.create({
+    const createdProduct = await this.prisma.products.create({
       data: {
         title,
         description,
@@ -22,7 +22,7 @@ export class ProductsRepository {
   };
 
   findProductById = async (productId) => {
-    const product = await Products.findFirst({
+    const product = await this.prisma.products.findFirst({
       where: { productId: +productId },
     });
 
@@ -30,7 +30,7 @@ export class ProductsRepository {
   };
 
   updateProduct = async (productId, title, description, status, id, name) => {
-    const updatedProduct = this.Products.update({
+    const updatedProduct = await this.this.prisma.products.update({
       where: { id: productId },
       data: { title, description, status },
     });
@@ -39,7 +39,7 @@ export class ProductsRepository {
   };
 
   deleteProduct = async (productId, id, name) => {
-    const deleteProduct = await Products.delete({
+    const deleteProduct = await this.prisma.products.delete({
       where: { id: productId },
     });
 

@@ -1,22 +1,35 @@
-import { Sequelize } from 'sequelize';
-import db from '../models/index.cjs';
-const { Products, Users } = db;
+import {
+  PASSWORD_HASH_SALT_ROUNDS,
+  JWT_ACCESS_TOKEN_SECRET,
+  JWT_ACCESS_TOKEN_EXPIRES_IN,
+} from '../../constants/security.costant.js';
+
+import bcrypt from 'bcrypt';
 
 export class AuthRepository {
+  constructor(prisma) {
+    this.prisma = prisma;
+  }
   signUpUser = async (email, password, passwordConfirm, name) => {
-    // newUser 부분 고쳐야 할지도..
-    // 그리고 내용 조금 더 추가해야 함
-    const newUser = await this.Users.create({
+    const hashedPassword = bcrypt.hashSync(password, PASSWORD_HASH_SALT_ROUNDS);
+
+    const newUser = await this.prisma.users.create({
       data: { email, password: hashedPassword, name },
     });
+    delete newUser.password;
 
     return newUser;
   };
 
-  signInUser = async (email, password) => {
-    const user = await this.Users.findOne({ where: { email } });
+  // signInUser = async (email, password) => {
+  //   const user = await this.Users.findOne({ where: { email } });
+
+  //   return user;
+  // };
+
+  findUserByEmail = async (email) => {
+    const user = await this.prisma.users.findFirst({ where: { email } });
+
+    return user;
   };
-  // 입력한 이메일에 해당하는 유저가 존재하고, 입력한 비밀번호와 hash된 비밀번호가 일치할 경우
-  // token 발급
-  // return accessToken;
 }

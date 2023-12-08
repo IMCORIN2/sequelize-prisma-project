@@ -1,8 +1,10 @@
 import { ProductsRepository } from '../repositories/products.repository.js';
 
 export class ProductsService {
-  productsRepository = ProductsRepository();
-
+  constructor(productsRepository) {
+    this.productsRepository = productsRepository;
+  }
+  // productsRepository = new ProductsRepository();
   findAllProducts = async () => {
     const products = await this.productsRepository.findAllProducts();
 
