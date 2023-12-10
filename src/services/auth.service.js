@@ -36,13 +36,14 @@ export class AuthService {
 
       // 토큰 발급
       const accessToken = jwt.sign(
-        { userId: user.id },
+        { userId: user.userId },
         JWT_ACCESS_TOKEN_SECRET,
         {
           expiresIn: JWT_ACCESS_TOKEN_EXPIRES_IN,
         },
       );
-
+      console.log('accessToken=>', accessToken);
+      console.log('user.Id=>', user.userId);
       return {
         accessToken,
         ...user,
@@ -54,7 +55,7 @@ export class AuthService {
 
   findUserByEmail = async (email) => {
     const user = await this.authRepository.findUserByEmail(email);
-
+    console.log('user=>', user);
     return user;
   };
 }

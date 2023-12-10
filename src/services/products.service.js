@@ -25,19 +25,21 @@ export class ProductsService {
     });
   };
 
-  createProduct = async (id, name, title, description) => {
+  createProduct = async (userId, title, description) => {
     const createdProduct = await this.productsRepository.createProduct(
-      id,
-      name,
+      userId,
       title,
       description,
     );
-
+    console.log('createdProduct=>>>>>>', createdProduct);
     return {
+      id: createdProduct.productId,
       title: createdProduct.title,
       description: createdProduct.description,
-      userId: createdProduct.userId,
-      userName: createdProduct.userName,
+      status: createdProduct.status,
+      userId: createdProduct.UserId,
+      createdAt: createdProduct.createdAt,
+      updatedAt: createdProduct.updatedAt,
     };
   };
 
@@ -61,7 +63,7 @@ export class ProductsService {
 
     if (!product) throw new Error('존재하지 않는 게시글입니다.');
 
-    const updatedProduct = await this.productsRepository.updateProuduct(
+    const updatedProduct = await this.productsRepository.updateProduct(
       productId,
       title,
       description,
@@ -78,11 +80,11 @@ export class ProductsService {
   };
 
   deleteProduct = async (productId, id, name) => {
-    const product = await this.productsRepository.findPostById(productId);
+    const product = await this.productsRepository.findProductById(productId);
 
     if (!product) throw new Error('존재하지 않는 게시글입니다.');
 
-    await this.productsRepository.deleteProduct(productId, id, name);
+    await this.productsRepository.deleteProduct(productId);
 
     return {
       id: product.id,

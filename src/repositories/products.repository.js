@@ -9,15 +9,15 @@ export class ProductsRepository {
     return products;
   };
 
-  createProduct = async (id, name, title, description) => {
+  createProduct = async (userId, title, description) => {
     const createdProduct = await this.prisma.products.create({
       data: {
         title,
         description,
-        userId,
+        UserId: userId,
       },
     });
-
+    console.log('createdProduct=>', createdProduct);
     return createdProduct;
   };
 
@@ -30,17 +30,17 @@ export class ProductsRepository {
   };
 
   updateProduct = async (productId, title, description, status, id, name) => {
-    const updatedProduct = await this.this.prisma.products.update({
-      where: { id: productId },
+    const updatedProduct = await this.prisma.products.update({
+      where: { productId: +productId },
       data: { title, description, status },
     });
 
     return updatedProduct;
   };
 
-  deleteProduct = async (productId, id, name) => {
+  deleteProduct = async (productId) => {
     const deleteProduct = await this.prisma.products.delete({
-      where: { id: productId },
+      where: { productId: +productId },
     });
 
     return deleteProduct;
