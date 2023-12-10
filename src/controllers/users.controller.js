@@ -1,12 +1,18 @@
 export class UsersController {
+  constructor(usersService) {
+    this.usersService = usersService;
+  }
   getUser = async (req, res, next) => {
     try {
-      const me = res.lacals.user;
+      console.log(res.locals.user);
+
+      const { userId } = res.locals.user;
+      const userInfo = await this.usersService.findUserById(userId);
 
       return res.status(200).json({
         success: true,
         message: '내 정보 조회에 성공했습니다.',
-        data: me,
+        data: userInfo,
       });
     } catch (err) {
       console.error(err);
