@@ -4,18 +4,11 @@ export class UsersController {
   }
   getUser = async (req, res, next) => {
     try {
-      console.log(res.locals.user);
-
       const { userId } = res.locals.user;
       const userInfo = await this.usersService.findUserById(userId);
-      console.log('last userInfo', userInfo);
-      console.log(userInfo.success);
-      console.log('userInfo.userId', userInfo.userId);
       if (userInfo.success === false) {
-        console.log('1');
         res.status(404).json(userInfo);
       } else if (userInfo.userId) {
-        console.log('2');
         return res.status(200).json({
           success: true,
           message: '내 정보 조회에 성공했습니다.',

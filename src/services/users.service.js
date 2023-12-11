@@ -13,7 +13,6 @@ export class UsersService {
           message: '등록된 유저 정보가 없습니다.',
         };
       }
-      console.log('userInfo', userInfo);
       return {
         userId: userInfo.userId,
         email: userInfo.email,

@@ -1,14 +1,11 @@
-// import { ProductsService } from '../services/products.service.js';
-
 export class ProductsController {
   constructor(productsService) {
     this.productsService = productsService;
   }
-  // productsService = new ProductsService();
+
   /* 상품 생성 API */
   createProduct = async (req, res, next) => {
     try {
-      // console.log('컨트롤러 res.locals.user=>', res.locals.user);
       const { userId: userId } = res.locals.user;
       const { title, description } = req.body;
 
@@ -17,7 +14,6 @@ export class ProductsController {
         title,
         description,
       );
-      // console.log('오잉', createdProduct);
 
       if (createdProduct.success === false) {
         return res.status(400).json(createdProduct);
@@ -50,7 +46,6 @@ export class ProductsController {
       const { productId } = req.params;
 
       const product = await this.productsService.findProductById(productId);
-      console.log('controller', product);
       if (product.success === false) {
         res.status(400).json(product);
       } else if (product.productId) {

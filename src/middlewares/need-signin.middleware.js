@@ -31,10 +31,6 @@ export const needSignin = async (req, res, next) => {
 
     const decodedPayload = jwt.verify(accessToken, JWT_ACCESS_TOKEN_SECRET);
     const { userId } = decodedPayload;
-    console.log(accessToken);
-    console.log(JWT_ACCESS_TOKEN_SECRET);
-    console.log('decodedPayload=>', decodedPayload);
-    console.log('decodeduserId=>', userId);
 
     // 일치 하는 userId가 없는 경우
     const user = await prisma.users.findFirst({
@@ -50,7 +46,6 @@ export const needSignin = async (req, res, next) => {
 
     delete user.password;
     res.locals.user = user;
-    console.log('res.locals.user=>', res.locals.user);
 
     next();
   } catch (error) {

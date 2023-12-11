@@ -2,7 +2,6 @@ export class AuthController {
   constructor(authService) {
     this.authService = authService;
   }
-  // authService = new AuthService();
   signUpUser = async (req, res, next) => {
     try {
       const { email, password, passwordConfirm, name } = req.body;
@@ -13,14 +12,10 @@ export class AuthController {
         passwordConfirm,
         name,
       );
-      console.log('newUser', newUser);
-      console.log('newUser.email', newUser.email);
-      console.log('newUser.success', newUser.success);
+
       if (newUser.success === false) {
-        console.log('2');
         return res.status(400).json(newUser);
       } else if (newUser.email) {
-        console.log('1');
         return res.status(201).json({
           success: true,
           data: newUser,

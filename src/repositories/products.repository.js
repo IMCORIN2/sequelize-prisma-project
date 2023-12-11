@@ -17,7 +17,6 @@ export class ProductsRepository {
         UserId: userId,
       },
     });
-    console.log('createdProduct=>', createdProduct);
     return createdProduct;
   };
 
@@ -34,7 +33,6 @@ export class ProductsRepository {
       where: { productId: +productId },
       data: { title, description, status },
     });
-    console.log('udp', updatedProduct);
     return updatedProduct;
   };
 
@@ -42,7 +40,6 @@ export class ProductsRepository {
     const deleteProduct = await this.prisma.products.delete({
       where: { productId: +productId },
     });
-    console.log(deleteProduct);
     return deleteProduct;
   };
 }

@@ -1,10 +1,7 @@
-import { ProductsRepository } from '../repositories/products.repository.js';
-
 export class ProductsService {
   constructor(productsRepository) {
     this.productsRepository = productsRepository;
   }
-  // productsRepository = new ProductsRepository();
   findAllProducts = async () => {
     const products = await this.productsRepository.findAllProducts();
 
@@ -13,7 +10,6 @@ export class ProductsService {
 
     return products.map((product) => {
       return {
-        // prisma model 설정에 따라 productId부분 바뀔수도 있음.
         id: product.productId,
         title: product.title,
         description: product.description,
@@ -38,7 +34,6 @@ export class ProductsService {
       title,
       description,
     );
-    console.log('createdProduct=>>>>>>', createdProduct);
     return {
       id: createdProduct.productId,
       title: createdProduct.title,
@@ -59,7 +54,6 @@ export class ProductsService {
         message: '상품 조회에 실패했습니다.',
       };
     }
-    console.log('product', product);
     return {
       productId: product.productId,
       title: product.title,
@@ -139,7 +133,6 @@ export class ProductsService {
 
   deleteProduct = async (productId, userId) => {
     const product = await this.productsRepository.findProductById(productId);
-    console.log('product', product);
     if (!product) {
       return {
         success: false,
@@ -149,7 +142,6 @@ export class ProductsService {
 
     // 작성자ID와 인증 정보의 사용자ID가 다른 경우
     const isProductOwner = product.UserId === userId;
-    console.log('isProductOwner', isProductOwner);
     if (!isProductOwner) {
       return {
         success: false,

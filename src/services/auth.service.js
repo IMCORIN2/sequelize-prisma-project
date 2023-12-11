@@ -9,7 +9,6 @@ export class AuthService {
   constructor(authRepository) {
     this.authRepository = authRepository;
   }
-  // authRepository = new AuthRepository();
   signUpUser = async (email, password, passwordConfirm, name) => {
     try {
       // 유효성 검사
@@ -111,7 +110,6 @@ export class AuthService {
 
       const hashedPassword = user?.password ?? '';
       const isPasswordMatched = bcrypt.compareSync(password, hashedPassword);
-      console.log(isPasswordMatched);
       const isCorrectUser = user && isPasswordMatched;
 
       if (!isCorrectUser) {
@@ -128,8 +126,6 @@ export class AuthService {
           expiresIn: JWT_ACCESS_TOKEN_EXPIRES_IN,
         },
       );
-      console.log('accessToken=>', accessToken);
-      console.log('user.Id=>', user.userId);
       return {
         accessToken,
       };
@@ -140,7 +136,6 @@ export class AuthService {
 
   findUserByEmail = async (email) => {
     const user = await this.authRepository.findUserByEmail(email);
-    console.log('user=>', user);
     return user;
   };
 }
