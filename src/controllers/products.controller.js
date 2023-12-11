@@ -8,23 +8,23 @@ export class ProductsController {
   /* 상품 생성 API */
   createProduct = async (req, res, next) => {
     try {
-      console.log('컨트롤럴 res.locals.user=>', res.locals.user);
+      // console.log('컨트롤러 res.locals.user=>', res.locals.user);
       const { userId: userId } = res.locals.user;
       const { title, description } = req.body;
 
-      console.log('userId=>', userId);
-      console.log('title=>', title);
-      console.log('description=>', description);
+      // console.log('userId=>', userId);
+      // console.log('title=>', title);
+      // console.log('description=>', description);
       if (!userId || !title || !description) {
         throw new Error('InvalidParamsError');
       }
-      console.log('유저아이디', userId);
+      // console.log('유저아이디', userId);
       const createdProduct = await this.productsService.createProduct(
         userId,
         title,
         description,
       );
-      console.log('오잉', createdProduct);
+      // console.log('오잉', createdProduct);
       return res.status(201).json({
         success: true,
         message: '상품 생성에 성공했습니다.',

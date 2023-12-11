@@ -1,12 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '../utils/prisma/index.js';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import {
-  PASSWORD_HASH_SALT_ROUNDS,
-  JWT_ACCESS_TOKEN_SECRET,
-  JWT_ACCESS_TOKEN_EXPIRES_IN,
-} from '../../constants/security.costant.js';
+
 import { AuthController } from '../controllers/auth.controller.js';
 import { AuthService } from '../services/auth.service.js';
 import { AuthRepository } from '../repositories/auth.repository.js';
