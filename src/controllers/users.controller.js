@@ -8,12 +8,20 @@ export class UsersController {
 
       const { userId } = res.locals.user;
       const userInfo = await this.usersService.findUserById(userId);
-
-      return res.status(200).json({
-        success: true,
-        message: '내 정보 조회에 성공했습니다.',
-        data: userInfo,
-      });
+      console.log('last userInfo', userInfo);
+      console.log(userInfo.success);
+      console.log('userInfo.userId', userInfo.userId);
+      if (userInfo.success === false) {
+        console.log('1');
+        res.status(404).json(userInfo);
+      } else if (userInfo.userId) {
+        console.log('2');
+        return res.status(200).json({
+          success: true,
+          message: '내 정보 조회에 성공했습니다.',
+          data: userInfo,
+        });
+      }
     } catch (err) {
       console.error(err);
       return res.status(500).json({

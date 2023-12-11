@@ -12,26 +12,22 @@ export class ProductsController {
       const { userId: userId } = res.locals.user;
       const { title, description } = req.body;
 
-      // console.log('userId=>', userId);
-      // console.log('title=>', title);
-      // console.log('description=>', description);
-      if (!userId || !title || !description) {
-        throw new Error('InvalidParamsError');
-      }
-      // console.log('유저아이디', userId);
       const createdProduct = await this.productsService.createProduct(
         userId,
         title,
         description,
       );
       // console.log('오잉', createdProduct);
-      return res.status(201).json({
-        success: true,
-        message: '상품 생성에 성공했습니다.',
-        data: {
-          createdProduct,
-        },
-      });
+
+      if (createdProduct.success === false) {
+        return res.status(400).json(createdProduct);
+      } else if (createdProduct.id) {
+        return res.status(201).json({
+          success: true,
+          message: '상품 생성에 성공했습니다.',
+          data: createdProduct,
+        });
+      }
     } catch (err) {
       next(err);
     }
@@ -54,15 +50,12 @@ export class ProductsController {
       const { productId } = req.params;
 
       const product = await this.productsService.findProductById(productId);
-
-      if (!product) {
-        return res.status(404).json({
-          success: false,
-          message: '상품 조회에 실패했습니다.',
-        });
+      console.log('controller', product);
+      if (product.success === false) {
+        res.status(400).json(product);
+      } else if (product.productId) {
+        res.status(200).json({ data: product });
       }
-
-      res.status(200).json({ data: product });
     } catch (err) {
       next(err);
     }
@@ -75,44 +68,6 @@ export class ProductsController {
       const { title, description, status } = req.body;
       const { id: userId, name: userName } = res.locals.user;
 
-      // 수정 정보가 하나도 없는 경우
-      if (!title && !description && !status) {
-        return res.status(400).json({
-          success: false,
-          message: '수정 정보는 최소 한 가지 이상이어야 합니다.',
-        });
-      }
-
-      const isValidStatus = status
-        ? status === 'FOR_SALE' || status === 'SOLD_OUT'
-        : true;
-
-      if (!isValidStatus) {
-        return res.status(400).json({
-          success: false,
-          message: '지원하지 않는 상태입니다. (status: FOR_SALE | SOLD_OUT)',
-        });
-      }
-
-      // 일치하는 상품이 존재하지 않는 경우
-      const product = await this.productsService.findProductById(productId);
-
-      if (!product) {
-        return res.status(404).json({
-          success: false,
-          message: '상품 조회에 실패했습니다.',
-        });
-      }
-
-      // 작성자ID와 인증 정보의 사용자ID가 다른 경우
-      const isProductOwner = product.userId === userId;
-      if (!isProductOwner) {
-        return res.status(403).json({
-          success: false,
-          message: '상품 수정 권한이 없습니다.',
-        });
-      }
-
       const updatedProduct = await this.productsService.updateProduct(
         productId,
         title,
@@ -122,11 +77,15 @@ export class ProductsController {
         userName,
       );
 
-      return res.status(200).json({
-        success: true,
-        message: '상품 수정에 성공했습니다.',
-        data: updatedProduct,
-      });
+      if (updatedProduct.success === false) {
+        return res.status(400).json(updatedProduct);
+      } else if (updatedProduct.productId) {
+        return res.status(200).json({
+          success: true,
+          message: '상품 수정에 성공했습니다.',
+          data: updatedProduct,
+        });
+      }
     } catch (err) {
       next(err);
     }
@@ -136,34 +95,22 @@ export class ProductsController {
   deleteProduct = async (req, res, next) => {
     try {
       const { productId } = req.params;
-      const { id: userId, name: userName } = res.locals.user;
+      const { userId } = res.locals.user;
 
-      // 일치하는 상품이 존재하지 않는 경우
-      const product = await this.productsService.findProductById(productId);
+      const deleteProduct = await this.productsService.deleteProduct(
+        productId,
+        userId,
+      );
 
-      if (!product) {
-        return res.status(404).json({
-          success: false,
-          message: '상품 조회에 실패했습니다.',
+      if (deleteProduct.success === false) {
+        res.status(400).json(deleteProduct);
+      } else if (deleteProduct.productId) {
+        return res.status(200).json({
+          success: true,
+          message: '상품 삭제에 성공했습니다.',
+          data: deleteProduct,
         });
       }
-
-      // 작성자ID와 인증 정보의 사용자ID가 다른 경우
-      const isProductOwner = product.userId === userId;
-      if (!isProductOwner) {
-        return res.status(403).json({
-          success: false,
-          message: '상품 삭제 권한이 없습니다.',
-        });
-      }
-
-      const deleteProduct = await this.productsService.deleteProduct(productId);
-
-      return res.status(200).json({
-        success: true,
-        message: '상품 삭제에 성공했습니다.',
-        data: deleteProduct,
-      });
     } catch (err) {
       next(err);
     }

@@ -8,8 +8,12 @@ export class UsersService {
       const userInfo = await this.usersRepository.findUserById(userId);
 
       if (!userInfo) {
-        throw new Error('등록된 유저가 없습니다.');
+        return {
+          success: false,
+          message: '등록된 유저 정보가 없습니다.',
+        };
       }
+      console.log('userInfo', userInfo);
       return {
         userId: userInfo.userId,
         email: userInfo.email,
